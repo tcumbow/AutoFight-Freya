@@ -968,7 +968,7 @@ local function UpdateBuffs()
 	-- Empower = false
 	-- SkeletonMageActive = false
 	-- SpiritMenderActive = false
-	-- FamiliarActive = false
+	FamiliarActive = false
 	-- FamiliarAOEActive = false
 	-- TwilightActive = false
 	-- CrystalWeaver = false
@@ -1000,8 +1000,8 @@ local function UpdateBuffs()
 			-- 	if timeLeft + 100 < msUntilBuffRecheckNeeded then msUntilBuffRecheckNeeded = timeLeft + 100 end
 			if name=="Blazing Shield" or name=="Radiant Ward" or name=="Conjured Ward" or name=="Empowered Ward" then
 				DamageShieldActive = true
-			-- elseif name=="Summon Volatile Familiar" and id==23316 then
-			-- 	FamiliarActive = true
+			elseif name=="Summon Volatile Familiar" and id==23316 then
+				FamiliarActive = true
 			-- elseif name=="Volatile Pulse" or (name=="Summon Volatile Familiar" and id==88933) then
 			-- 	FamiliarAOEActive = true
 			-- elseif name=="Summon Twilight Matriarch" then
@@ -1038,7 +1038,8 @@ local function UpdateBuffs()
 end
 
 local function AutoFightMain()
-	if not IsUnitInCombat('player') or IsReticleHidden() or IsUnitSwimming('player') then return end
+	if not IsUnitInCombat('player') then return end
+	if IsReticleHidden() or IsUnitSwimming('player') then return end
 	
 	if ETA > GetGameTimeMilliseconds() then return end
 
@@ -1049,6 +1050,11 @@ local function AutoFightMain()
 		LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100)
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_1,50)
 		ETA = GetGameTimeMilliseconds() + 1100
+	end
+
+	if not FamiliarActive and MyMagicka > 5000 then
+		LibPixelControl.SetIndOnFor(LibPixelControl.VK_2,50)
+		ETA = GetGameTimeMilliseconds() + 2000
 	end
 
 end
