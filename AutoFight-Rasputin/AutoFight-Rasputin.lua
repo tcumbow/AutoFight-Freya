@@ -1,10 +1,6 @@
-local ADDON_NAME = "AutoFight-Rasputin"
 local ADDON_VERSION = "1.0"
 local ADDON_AUTHOR = "Tom Cumbow"
 
-local RawPlayerName = GetRawUnitName("player")
-local Mounted = false
-local Moving = false
 local MajorSorcery = false
 local MajorProphecy = false
 local MinorSorcery = false
@@ -12,17 +8,12 @@ local MajorResolve = false
 local MinorMending = false
 local MeditationActive = false
 local ImbueWeaponActive = false
-local DamageShieldActive = false
 local MajorGallop = false
 local MajorExpedition = false
 local Empower = false
 local SkeletonMageActive = false
 local SpiritMenderActive = false
-local FamiliarActive = false
-local FamiliarAOEActive = false
-local TwilightActive = false
 local CrystalWeaver = false
-local CrystalFragmentsProc = false
 local DnInfernoActive = false
 local EnergyOverloadActive = false
 
@@ -35,11 +26,6 @@ local Health = 0
 local HealthPrevious = 0
 local Ultimate = 0
 local UltimatePercent = 1.00
-
-local LowestGroupHealthPercentWithoutRegen = 1.00
-local LowestGroupHealthPercentWithRegen = 1.00
-local LowestGroupHealthPercent = 1.00
-
 
 local InputReady = true
 local InCombat = false
@@ -59,12 +45,7 @@ local CrouchWasAuto = false
 local CurrentBar = 0
 local OtherBar = 0
 
-local LastStealSightTime = 0
 local LastEnemySightTime = 0
--- local LastStationaryTime = 0
-
-local CurrentPixel = 0
-local PreviousPixel = 0
 
 local TargetNotTaunted = false
 local TargetIsNotPlayer = false
@@ -80,69 +61,26 @@ local TargetIsNotDestructiveTouched = false
 local TargetNotFury = false
 local TargetNotMagSteal = false
 
-local AvailableReticleInteraction = nil
-local AvailableReticleTarget = nil
+---------------------------------------------------------------------------------
+local ADDON_NAME = "AutoFight-Rasputin"
 
-local PickpocketPrime = false
+local ETA = 0
+local MyMagicka
+local MyMaxMagicka
+local MyHealth
+local MyMaxHealth
 
-local FrontBar, BackBar = false, false
-local InBossBattle = false
-local ReelInFish = false
-local ShouldSprint = false
+local DamageShieldActive = false
+local FamiliarActive = false
+local FamiliarAOEActive = false
+local TwilightActive = false
+local CrystalFragmentsProc = false
 
-local BurstHeal = { }
-local SelfHeal = { }
-local HealOverTime = { }
-local SkeletonMage = { }
-local SpiritMender = { }
-local Degeneration = { }
-local Ritual = { }
-local RemoteInterrupt = { }
-local Taunt = { }
-local SunFire = { }
-local MagMajorResolveSkill = { }
-local Meditation = { }
-local ImbueWeapon = { }
-local DamageShield = { }
-local RapidManeuver = { }
-local Accelerate = { }
-local WeaknessToElements = { }
-local UnstableWall = { }
-local SoulTrap = { }
-local DestructiveTouch = { }
-local MagDpsSpamSkill = { }
-local Pokes = { }
-local SolarBarrage = { }
-local VolatileFamiliar = { }
-local TwilightMatriarch = { }
-local MagMajSorc = { }
-local RadiantAura = { }
-local BoundlessStorm = { }
-local CrystalFragments = { }
-local Fury = { }
-local InnerLight = { }
-local DnInferno = { }
+local LowestGroupHealthPercentWithoutRegen = 1.00
+local LowestGroupHealthPercentWithRegen = 1.00
+local LowestGroupHealthPercent = 1.00
 
-local EnergyOverload = { }
 
-local DoNothing = 0
--- 1 thru 5 are used for doing abilities 1 thru 5, based on the number assigned in UpdateAbilitySlotInfo()
-local DoHeavyAttack = 6
-local DoRollDodge = 7
-local DoBreakFreeInterrupt = 8
-local DoBlock = 9
-local DoReelInFish = 10
-local DoLightAttack = 11
-local DoInteract = 12
-local DoSprint = 13
-local DoMountSprint = 14
-local DoCrouch = 15
-local DoFrontBar = 16
-local DoBackBar = 17
-local DoStartBlock = 18
-local DoStopBlock = 19
-local DoUltimate = 20
-local DoQuickslot = 21
 
 local function OnEventCombatStateChanged(event, inCombat)
 	if inCombat then
@@ -152,11 +90,6 @@ local function OnEventCombatStateChanged(event, inCombat)
 	end
 end
 
-local ETA = 0
-local MyMagicka
-local MyMaxMagicka
-local MyHealth
-local MyMaxHealth
 
 local function UnitHasRegen(unitTag)
 	local numBuffs = GetNumBuffs(unitTag)

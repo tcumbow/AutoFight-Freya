@@ -78,7 +78,10 @@
         "SETTING_TYPE_LOOT",
         "LOOT_SETTING_PREVENT_STEALING_PLACED",
         "SETTING_TYPE_COMBAT",
-        "COMBAT_SETTING_PREVENT_ATTACKING_INNOCENTS"
+        "COMBAT_SETTING_PREVENT_ATTACKING_INNOCENTS",
+        "IsUnitSwimming",
+        "LibPixelControl",
+        "IsBlockActive"
     ],
     "cSpell.words": [
         "Sorc"
