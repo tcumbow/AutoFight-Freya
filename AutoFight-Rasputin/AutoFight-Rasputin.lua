@@ -975,7 +975,7 @@ local function UpdateBuffs()
 	FamiliarAOEActive = false
 	TwilightActive = false
 	-- CrystalWeaver = false
-	-- CrystalFragmentsProc = false
+	CrystalFragmentsProc = false
 	-- DnInfernoActive = false
 	-- EnergyOverloadActive = false
 	-- -- MustBreakFree = false
@@ -1011,8 +1011,8 @@ local function UpdateBuffs()
 				TwilightActive = true
 			-- elseif name=="Crystal Weaver" then
 			-- 	CrystalWeaver = true
-			-- elseif name=="Crystal Fragments Proc" then
-			-- 	CrystalFragmentsProc = true
+			elseif name=="Crystal Fragments Proc" then
+				CrystalFragmentsProc = true
 			-- elseif name=="Flames of Oblivion" then
 			-- 	DnInfernoActive = true
 			-- elseif name=="Energy Overload" then
@@ -1061,15 +1061,15 @@ local function AutoFightMain()
 		ETA = GetGameTimeMilliseconds() + 1100
 	end
 
-	if not DamageShieldActive and MyMagicka > 10000 then
+	if CrystalFragmentsProc and GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE and MyMagicka > 3500 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
-		LibPixelControl.SetIndOnFor(LibPixelControl.VK_3,50)
-		ETA = GetGameTimeMilliseconds() + 1100
+		LibPixelControl.SetIndOnFor(LibPixelControl.VK_4,50)
+		ETA = GetGameTimeMilliseconds() + 600
 	end
 
-	if not FamiliarActive and MyMagicka > 20000 then
-		LibPixelControl.SetIndOnFor(LibPixelControl.VK_2,50)
-		ETA = GetGameTimeMilliseconds() + 2000
+	if GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE and MyMagicka > 10000 then
+		LibPixelControl.SetIndOnFor(LibPixelControl.VK_4,50)
+		ETA = GetGameTimeMilliseconds() + 1500
 	end
 	
 	if FamiliarActive and not FamiliarAOEActive and MyMagicka > 20000 then
