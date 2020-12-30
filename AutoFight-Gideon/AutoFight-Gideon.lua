@@ -1,7 +1,6 @@
-local ADDON_NAME = "AutoAssist"
+local ADDON_NAME = "AutoFight-Gideon"
 local ADDON_VERSION = "1.0"
 local ADDON_AUTHOR = "Tom Cumbow"
-local Config = { }
 
 local RawPlayerName = GetRawUnitName("player")
 local Mounted = false
@@ -146,13 +145,6 @@ local DoUltimate = 20
 local DoQuickslot = 21
 
 
-local function SetPixel(x)
-	PDL:SetColor(0,0,(x/255))
-	PreviousPixel = CurrentPixel
-	CurrentPixel = x
-	-- d(x)
-end
-
 local function DoAbility(ability)
 	if ability[CurrentBar] then return ability[CurrentBar]
 	elseif ability[OtherBar] then return (16+OtherBar)
@@ -162,8 +154,6 @@ end
 
 local function UpdateLastSights()
 	if TargetIsEnemy then LastEnemySightTime = GetGameTimeMilliseconds() end
-	if AvailableReticleInteraction == "Steal" or AvailableReticleInteraction == "BlockedSteal" then LastStealSightTime = GetGameTimeMilliseconds() end
-	--if not IsPlayerMoving() then LastStationaryTime = GetGameTimeMilliseconds() end
 end
 
 local function GetPotionIsReady()
@@ -505,11 +495,6 @@ end
 
 
 
-
-
-
-
-
 local function UnitHasRegen(unitTag)
 	local numBuffs = GetNumBuffs(unitTag)
 	if numBuffs > 0 then
@@ -636,16 +621,6 @@ end
 
 
 
-
-
-local function UpdatePickpocketState()
-	local isInBonus, isHostile, percentChance, _, isEmpty, prospectiveResult, _, _ = GetGameCameraPickpocketingBonusInfo()
-	local cantInteract 	= isHostile or isEmpty or not prospectiveResult == PROSPECTIVE_PICKPOCKET_RESULT_CAN_ATTEMPT
-	PickpocketPrime		= not cantInteract and percentChance == 100
-end
-
-
-
 local function UpdateBarState()
 	local barNum = GetActiveWeaponPairInfo()
 	if barNum == 1 then
@@ -682,32 +657,6 @@ local function DismissTwilight()
 	end
 
 end
-
-
-local function PeriodicUpdate()
-	BigLogicRoutine()
-
-	if TwilightActive and not InCombat and LowestGroupHealthPercent > 0.90 and (GetGameTimeMilliseconds() - LastEnemySightTime) > 45000 then
-		DismissTwilight()
-	end
-	
-	zo_callLater(PeriodicUpdate,250)
-end
-
-local function OccasionalUpdate()
-	if GetNumBagUsedSlots(BAG_BACKPACK) == GetBagSize(BAG_BACKPACK) then
-		InventoryFull = true
-	else
-		InventoryFull = false
-	end
-
-	zo_callLater(PeriodicUpdate,5000)
-end
-
-
-
-
-
 
 
 local function UpdateBuffs()
@@ -802,44 +751,6 @@ local function UpdateBuffs()
 	BigLogicRoutine()
 end
 
-
-
-
-
-local function OnEventMountedStateChanged(eventCode,mounted)
-	Mounted = mounted
-	Sprinting = false
-	BigLogicRoutine()
-end
-
-local function OnEventInteractableTargetChanged()
-	UpdateLastSights()
-	local action, interactableName, blocked, mystery2, additionalInfo = GetGameCameraInteractableActionInfo()
-	-- d(action)
-	-- d(interactableName)
-	-- d(blocked)
-	-- d(mystery2)
-	-- d(additionalInfo)
-	if action == "Steal From" then action = "Steal" end
-	if blocked or additionalInfo == 2 then
-		if action == "Steal" then
-			action = "BlockedSteal"
-		else
-			action = nil
-		end
-		interactableName = nil
-	end
-	if action == "Pickpocket" then UpdatePickpocketState() else PickpocketPrime = false end
-	if AvailableReticleInteraction ~= action or AvailableReticleTarget ~= interactableName then
-		AvailableReticleInteraction = action
-		AvailableReticleTarget = interactableName
-		BigLogicRoutine()
-	end
-
-end
-
-
-
 local function OnEventEffectChanged(e, change, slot, auraName, unitTag, start, finish, stack, icon, buffType, effectType, abilityType, statusType, unitName, unitId, abilityId, sourceType)
 	UpdateLowestGroupHealth()
 	UpdateTargetInfo()
@@ -887,30 +798,7 @@ local function OnEventGroupSupportRangeUpdate()
 	BigLogicRoutine()
 end
 
-local function PreventStealing()
-	SetSetting(SETTING_TYPE_LOOT, LOOT_SETTING_PREVENT_STEALING_PLACED, 1)
-end
-local function AllowStealing()
-	SetSetting(SETTING_TYPE_LOOT, LOOT_SETTING_PREVENT_STEALING_PLACED, 0)
-end
 
-local function OnEventStealthChange(_,_,stealthState)
-	if stealthState > 0 then
-		AllowStealing()
-		Crouching = true
-		if stealthState == 3 then
-			Hidden = true
-		else
-			Hidden = false
-		end
-	else
-		PreventStealing()
-		Crouching = false
-		CrouchWasAuto = false
-		Hidden = false
-	end
-	BigLogicRoutine()
-end
 
 local function OnEventCombatTipDisplay(_, tipId)
 	if tipId == 2 then
@@ -1006,29 +894,6 @@ local function OnEventUiModeChanged()
 	BigLogicRoutine()
 end
 
-function PD_ReelInFish()
-	ReelInFish = true
-	BigLogicRoutine()
-end
-
-function PD_StopReelInFish()
-	ReelInFish = false
-	BigLogicRoutine()
-end
-
-ZO_CreateStringId("SI_BINDING_NAME_AutoSprint", "AutoSprint")
-
-function AutoAssistSprintYes()
-	ShouldSprint = true
-	BigLogicRoutine()
-end
-
-function AutoAssistSprintNo()
-	ShouldSprint = false
-	BigLogicRoutine()
-end
-
-
 local function PD_RegisterForEvents()
 	EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_GAME_CAMERA_UI_MODE_CHANGED, OnEventUiModeChanged)
 	EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_PLAYER_COMBAT_STATE, OnEventCombatStateChanged)
@@ -1043,196 +908,8 @@ local function PD_RegisterForEvents()
 	EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_RETICLE_TARGET_CHANGED, OnEventReticleChanged)
 	EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_WEAPON_PAIR_LOCK_CHANGED, OnEventBarSwap)
 	EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_ACTION_SLOT_UPDATED, OnEventBarSwap)
-	EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_STEALTH_STATE_CHANGED, OnEventStealthChange)
 	-- EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_SKILL_BUILD_SELECTION_UPDATED, OnEventAbilityChange) -- Turns out this isn't the right event, I'm just going to update abilities when combat begins
 	-- EVENT_MANAGER:AddFilterForEvent(ADDON_NAME, EVENT_COMBAT_EVENT, REGISTER_FILTER_TARGET_COMBAT_UNIT_TYPE, COMBAT_UNIT_TYPE_PLAYER)
-	ZO_PreHookHandler(RETICLE.interact, "OnEffectivelyShown", OnEventInteractableTargetChanged)
-	ZO_PreHookHandler(RETICLE.interact, "OnHide", OnEventInteractableTargetChanged)
-end
-
-
-local function SetUpSettingsMenu()
-	local LAM = LibAddonMenu2
-	local panelName = "AutoAssistSettings"
-
-	local panelData = {
-		type = "panel",
-		name = "AutoAssist",
-		author = "Tom Cumbow",
-	}
-	local panel = LAM:RegisterAddonPanel(panelName, panelData)
-	local optionsData = {
-		{
-			type = "checkbox",
-			name = "Swap bars",
-			getFunc = function() return Config.SwapBars end,
-			setFunc = function(value) Config.SwapBars = value end
-		},
-		{
-			type = "checkbox",
-			name = "Break free",
-			getFunc = function() return Config.BreakFree end,
-			setFunc = function(value) Config.BreakFree = value end
-		},
-		{
-			type = "checkbox",
-			name = "Dodge",
-			getFunc = function() return Config.Dodge end,
-			setFunc = function(value) Config.Dodge = value end
-		},
-		{
-			type = "checkbox",
-			name = "Block",
-			getFunc = function() return Config.Block end,
-			setFunc = function(value) Config.Block = value end
-		},
-		{
-			type = "checkbox",
-			name = "Interrupt",
-			getFunc = function() return Config.Interrupt end,
-			setFunc = function(value) Config.Interrupt = value end
-		},
-		{
-			type = "checkbox",
-			name = "Remote interrupt",
-			getFunc = function() return Config.RemoteInterrupt end,
-			setFunc = function(value) Config.RemoteInterrupt = value end
-		},
-		{
-			type = "checkbox",
-			name = "Healing",
-			getFunc = function() return Config.Healing end,
-			setFunc = function(value) Config.Healing = value end
-		},
-		{
-			type = "checkbox",
-			name = "Use Crown Tri-Restoration potions",
-			getFunc = function() return Config.PotionTri end,
-			setFunc = function(value) Config.PotionTri = value end
-		},
-		{
-			type = "checkbox",
-			name = "Use Spell Power/Crit potions",
-			getFunc = function() return Config.PotionSpell end,
-			setFunc = function(value) Config.PotionSpell = value end
-		},
-		{
-			type = "checkbox",
-			name = "Taunt bosses",
-			getFunc = function() return Config.TauntBosses end,
-			setFunc = function(value) Config.TauntBosses = value end
-		},
-		{
-			type = "checkbox",
-			name = "Overload",
-			getFunc = function() return Config.Overload end,
-			setFunc = function(value) Config.Overload = value end
-		},
-		{
-			type = "checkbox",
-			name = "Buffs",
-			getFunc = function() return Config.Buffs end,
-			setFunc = function(value) Config.Buffs = value end
-		},
-		{
-			type = "checkbox",
-			name = "Meditation",
-			getFunc = function() return Config.Meditation end,
-			setFunc = function(value) Config.Meditation = value end
-		},
-		{
-			type = "checkbox",
-			name = "Swap to bar with Inner Light before attacking",
-			getFunc = function() return Config.SwapToInnerLight end,
-			setFunc = function(value) Config.SwapToInnerLight = value end
-		},
-		{
-			type = "checkbox",
-			name = "Damage abilities",
-			getFunc = function() return Config.DamageAbils end,
-			setFunc = function(value) Config.DamageAbils = value end
-		},
-		{
-			type = "checkbox",
-			name = "Heavy attacks",
-			getFunc = function() return Config.HeavyAttacks end,
-			setFunc = function(value) Config.HeavyAttacks = value end
-		},
-		{
-			type = "checkbox",
-			name = "Light attacks",
-			getFunc = function() return Config.LightAttacks end,
-			setFunc = function(value) Config.LightAttacks = value end
-		},
-		{
-			type = "checkbox",
-			name = "Loot/Harvest/Take",
-			getFunc = function() return Config.Loot end,
-			setFunc = function(value) Config.Loot = value end
-		},
-		{
-			type = "checkbox",
-			name = "Disarm traps",
-			getFunc = function() return Config.Disarm end,
-			setFunc = function(value) Config.Disarm = value end
-		},
-		{
-			type = "checkbox",
-			name = "Sprint",
-			getFunc = function() return Config.Sprint end,
-			setFunc = function(value) Config.Sprint = value end
-		},
-		{
-			type = "checkbox",
-			name = "Speed spell",
-			getFunc = function() return Config.Expedition end,
-			setFunc = function(value) Config.Expedition = value end
-		},
-		{
-			type = "checkbox",
-			name = "Sprint when mounted",
-			getFunc = function() return Config.MountSprint end,
-			setFunc = function(value) Config.MountSprint = value end
-		},
-		{
-			type = "checkbox",
-			name = "Speed spell on mount",
-			getFunc = function() return Config.Gallop end,
-			setFunc = function(value) Config.Gallop = value end
-		},
-		{
-			type = "checkbox",
-			name = "Dismount for Platinum",
-			getFunc = function() return Config.PlatinumDismount end,
-			setFunc = function(value) Config.PlatinumDismount = value end
-		},
-		{
-			type = "checkbox",
-			name = "Hide Twilight when no enemies around",
-			getFunc = function() return Config.HideTwilight end,
-			setFunc = function(value) Config.HideTwilight = value end
-		},
-		{
-			type = "checkbox",
-			name = "Steal when fully hidden",
-			getFunc = function() return Config.Steal end,
-			setFunc = function(value) Config.Steal = value end
-		},
-		{
-			type = "checkbox",
-			name = "Crouch and uncrouch when stealable items detected",
-			getFunc = function() return Config.CrouchSteal end,
-			setFunc = function(value) Config.CrouchSteal = value end
-		},
-		{
-			type = "checkbox",
-			name = "Pickpocket when 100% chance",
-			getFunc = function() return Config.Pickpocket end,
-			setFunc = function(value) Config.Pickpocket = value end
-		},
-
-	}
-	LAM:RegisterOptionControls(panelName, optionsData)
 end
 
 local function BindSpecial (desiredActionName, keyCode)
@@ -1265,36 +942,19 @@ end
 
 local function InitialInfoGathering()
 	PreventAttackingInnocents()
-	SetUpSettingsMenu()
 	BindRequiredKeys()
 	InCombat = IsUnitInCombat("player")
 	Mounted = IsMounted()
 	UpdateBarState()
 	UpdateAbilitySlotInfo()
-	PeriodicUpdate()
-	OccasionalUpdate()
 	PD_RegisterForEvents()
-	AutoAssistLoaded = true -- global variable to indicate this add-on has been loaded, used to enable integrations in other add-ons
-	PixelDataLoaded = true -- global variable to indicate this add-on has been loaded, used to enable integrations in other add-ons
 	UpdateBuffs()
 end
-
-
-
 
 local function OnAddonLoaded(event, name)
 	if name == ADDON_NAME then
 		EVENT_MANAGER:UnregisterForEvent(ADDON_NAME, event)
-		Config = ZO_SavedVars:NewCharacterIdSettings("AutoAssistSavedVariables",1)
-		AutoAssistWindow = WINDOW_MANAGER:CreateTopLevelWindow("AutoAssist")
-		AutoAssistWindow:SetDimensions(100,100)
-		PDL = CreateControl(nil, AutoAssistWindow,  CT_LINE)
-		PDL:SetAnchor(TOPLEFT, AutoAssistWindow, TOPLEFT, 0, 0)
-		PDL:SetAnchor(TOPRIGHT, AutoAssistWindow, TOPLEFT, 1, 1)
-		SetPixel(DoNothing)
-
 		zo_callLater(InitialInfoGathering, 1000)
-
 	end
 end
 
