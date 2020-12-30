@@ -164,30 +164,25 @@ local function UpdateBuffs()
 	CrystalFragmentsProc = false
 	-- DnInfernoActive = false
 	-- EnergyOverloadActive = false
-	-- -- MustBreakFree = false
 	local numBuffs = GetNumBuffs("player")
 	if numBuffs > 0 then
 		for i = 1, numBuffs do
 			local name, _, endTime, _, _, _, _, _, _, _, id, _ = GetUnitBuffInfo("player", i)
-			-- local now = GetGameTimeMilliseconds()
-			-- local timeLeft = (math.floor(endTime * 1000)) - now
 			-- if name=="Major Sorcery" then
 			-- 	MajorSorcery = true
 			-- elseif name=="Major Prophecy" then
 			-- 	MajorProphecy = true
 			-- elseif name=="Minor Sorcery" then
 			-- 	MinorSorcery = true
-			-- elseif name=="Major Resolve" and timeLeft>optimalBuffOverlap then
+			-- elseif name=="Major Resolve" then
 			-- 	MajorResolve = true
-			-- 	if timeLeft < msUntilBuffRecheckNeeded then msUntilBuffRecheckNeeded = timeLeft end
 			-- elseif name=="Minor Mending" then
 			-- 	MinorMending = true
 			-- elseif name=="Deep Thoughts" then
 			-- 	MeditationActive = true
-			-- elseif name=="Elemental Weapon" and (timeLeft + 100) > optimalBuffOverlap then
+			-- elseif name=="Elemental Weapon" then
 			-- 	ImbueWeaponActive = true
-			-- 	if timeLeft + 100 < msUntilBuffRecheckNeeded then msUntilBuffRecheckNeeded = timeLeft + 100 end
-			if name=="Blazing Shield" or name=="Radiant Ward" or name=="Conjured Ward" or name=="Empowered Ward" then
+			if name=="Conjured Ward" or name=="Empowered Ward" then
 				DamageShieldActive = true
 			elseif name=="Summon Volatile Familiar" and id==23316 then
 				FamiliarActive = true
@@ -203,20 +198,12 @@ local function UpdateBuffs()
 			-- 	DnInfernoActive = true
 			-- elseif name=="Energy Overload" then
 			-- 	EnergyOverloadActive = true
-			-- elseif name=="Dampen Magic" then
-			-- 	DamageShieldActive = true
 			-- elseif name=="Empower" then
 			-- 	Empower = true
 			-- elseif name=="Skeletal Arcanist" then
 			-- 	SkeletonMageActive = true
 			-- elseif name=="Spirit Mender" then
 			-- 	SpiritMenderActive = true
-			-- elseif name=="Major Expedition" and timeLeft>optimalBuffOverlap then
-			-- 	MajorExpedition = true
-			-- 	if timeLeft < msUntilBuffRecheckNeeded then msUntilBuffRecheckNeeded = timeLeft end
-			-- elseif name=="Major Gallop" and timeLeft>optimalBuffOverlap then
-			-- 	MajorGallop = true
-			-- 	if timeLeft < msUntilBuffRecheckNeeded then msUntilBuffRecheckNeeded = timeLeft end
 			end
 		end
 		-- if msUntilBuffRecheckNeeded < 999999 then
