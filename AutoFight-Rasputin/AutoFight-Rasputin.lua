@@ -228,44 +228,30 @@ local function AutoFightMain()
 	if not TwilightActive and MyMagicka > 3500 then
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_1,50)
 		ETA = GetGameTimeMilliseconds() + 2000
-	end
-
-	if LowestGroupHealthPercent < 0.40 and TwilightActive and MyMagicka > 3500 then
+	elseif LowestGroupHealthPercent < 0.40 and TwilightActive and MyMagicka > 3500 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_1,50)
 		ETA = GetGameTimeMilliseconds() + 1100
-	end
-
-	if LowestGroupHealthPercentWithoutRegen < 0.90 and TwilightActive and MyMagicka > 3500 then
+	elseif LowestGroupHealthPercentWithoutRegen < 0.90 and TwilightActive and MyMagicka > 3500 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_5,50)
 		ETA = GetGameTimeMilliseconds() + 1100
-	end
-
-	if CrystalFragmentsProc and GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE and MyMagicka > 3500 then
+	elseif CrystalFragmentsProc and GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE and MyMagicka > 3500 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_4,50)
 		ETA = GetGameTimeMilliseconds() + 600
-	end
-
-	if not DamageShieldActive and MyMagicka > 10000 then
+	elseif not DamageShieldActive and MyMagicka > 10000 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_3,50)
 		ETA = GetGameTimeMilliseconds() + 1100
-	end
-
-	if not FamiliarActive and MyMagicka > 20000 then
+	elseif not FamiliarActive and MyMagicka > 20000 then
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_2,50)
 		ETA = GetGameTimeMilliseconds() + 2000
-	end
-
-	if FamiliarActive and not FamiliarAOEActive and MyMagicka > 20000 then
+	elseif FamiliarActive and not FamiliarAOEActive and MyMagicka > 20000 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_2,50)
 		ETA = GetGameTimeMilliseconds() + 1100
-	end
-
-	if GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE and MyMagicka > 10000 then
+	elseif GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE and MyMagicka > 10000 then
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_4,50)
 		ETA = GetGameTimeMilliseconds() + 1500
 	end
