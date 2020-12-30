@@ -1,0 +1,10 @@
+<Bindings>
+  <Layer name="General">
+    <Category name="AutoAssist">
+      <Action name="AutoSprint">
+        <Down>AutoAssistSprintYes()</Down>
+        <Up>AutoAssistSprintNo()</Up>
+      </Action>
+    </Category>
+  </Layer>
+</Bindings>
