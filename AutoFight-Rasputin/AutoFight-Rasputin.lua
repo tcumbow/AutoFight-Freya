@@ -256,7 +256,7 @@ local function AutoFightMain()
 		ETA = GetGameTimeMilliseconds() + 1500
 	elseif GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE then
 		LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_LEFT,2200)
-		ETA = GetGameTimeMilliseconds() + 2000
+		ETA = GetGameTimeMilliseconds() + 1900
 	end
 
 end
