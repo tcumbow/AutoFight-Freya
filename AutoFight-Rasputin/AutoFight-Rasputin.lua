@@ -264,7 +264,6 @@ local function AutoFightMain()
 		ETA = GetGameTimeMilliseconds() + 1500
 	end
 
-	
 end
 
 local function OnAddonLoaded(event, name)
