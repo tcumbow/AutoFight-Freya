@@ -659,7 +659,7 @@ local function DismissTwilight()
 end
 
 
-local function UpdateBuffs()
+local function UpdateBuffsOld()
 	MajorSorcery = false
 	MajorProphecy = false
 	MinorSorcery = false
@@ -951,14 +951,106 @@ local function InitialInfoGathering()
 	UpdateBuffs()
 end
 
+local ETA = 0
 local MyMagicka
 
-local function AutoFightMain()
-	if IsReticleHidden() then return end
-	MyMagicka = GetUnitPower('player', POWERTYPE_MAGICKA)
-	if MyMagicka > 5000 then
-		LibPixelControl.SetIndOnFor(LibPixelControl.VK_1,50)
+local function UpdateBuffs()
+	-- MajorSorcery = false
+	-- MajorProphecy = false
+	-- MinorSorcery = false
+	-- MajorResolve = false
+	-- MinorMending = false
+	-- MeditationActive = false
+	-- ImbueWeaponActive = false
+	DamageShieldActive = false
+	-- MajorGallop = false
+	-- MajorExpedition = false
+	-- Empower = false
+	-- SkeletonMageActive = false
+	-- SpiritMenderActive = false
+	-- FamiliarActive = false
+	-- FamiliarAOEActive = false
+	-- TwilightActive = false
+	-- CrystalWeaver = false
+	-- CrystalFragmentsProc = false
+	-- DnInfernoActive = false
+	-- EnergyOverloadActive = false
+	-- -- MustBreakFree = false
+	local numBuffs = GetNumBuffs("player")
+	if numBuffs > 0 then
+		for i = 1, numBuffs do
+			local name, _, endTime, _, _, _, _, _, _, _, id, _ = GetUnitBuffInfo("player", i)
+			-- local now = GetGameTimeMilliseconds()
+			-- local timeLeft = (math.floor(endTime * 1000)) - now
+			-- if name=="Major Sorcery" then
+			-- 	MajorSorcery = true
+			-- elseif name=="Major Prophecy" then
+			-- 	MajorProphecy = true
+			-- elseif name=="Minor Sorcery" then
+			-- 	MinorSorcery = true
+			-- elseif name=="Major Resolve" and timeLeft>optimalBuffOverlap then
+			-- 	MajorResolve = true
+			-- 	if timeLeft < msUntilBuffRecheckNeeded then msUntilBuffRecheckNeeded = timeLeft end
+			-- elseif name=="Minor Mending" then
+			-- 	MinorMending = true
+			-- elseif name=="Deep Thoughts" then
+			-- 	MeditationActive = true
+			-- elseif name=="Elemental Weapon" and (timeLeft + 100) > optimalBuffOverlap then
+			-- 	ImbueWeaponActive = true
+			-- 	if timeLeft + 100 < msUntilBuffRecheckNeeded then msUntilBuffRecheckNeeded = timeLeft + 100 end
+			if name=="Blazing Shield" or name=="Radiant Ward" or name=="Conjured Ward" or name=="Empowered Ward" then
+				DamageShieldActive = true
+			-- elseif name=="Summon Volatile Familiar" and id==23316 then
+			-- 	FamiliarActive = true
+			-- elseif name=="Volatile Pulse" or (name=="Summon Volatile Familiar" and id==88933) then
+			-- 	FamiliarAOEActive = true
+			-- elseif name=="Summon Twilight Matriarch" then
+			-- 	TwilightActive = true
+			-- elseif name=="Crystal Weaver" then
+			-- 	CrystalWeaver = true
+			-- elseif name=="Crystal Fragments Proc" then
+			-- 	CrystalFragmentsProc = true
+			-- elseif name=="Flames of Oblivion" then
+			-- 	DnInfernoActive = true
+			-- elseif name=="Energy Overload" then
+			-- 	EnergyOverloadActive = true
+			-- elseif name=="Dampen Magic" then
+			-- 	DamageShieldActive = true
+			-- elseif name=="Empower" then
+			-- 	Empower = true
+			-- elseif name=="Skeletal Arcanist" then
+			-- 	SkeletonMageActive = true
+			-- elseif name=="Spirit Mender" then
+			-- 	SpiritMenderActive = true
+			-- elseif name=="Major Expedition" and timeLeft>optimalBuffOverlap then
+			-- 	MajorExpedition = true
+			-- 	if timeLeft < msUntilBuffRecheckNeeded then msUntilBuffRecheckNeeded = timeLeft end
+			-- elseif name=="Major Gallop" and timeLeft>optimalBuffOverlap then
+			-- 	MajorGallop = true
+			-- 	if timeLeft < msUntilBuffRecheckNeeded then msUntilBuffRecheckNeeded = timeLeft end
+			end
+		end
+		-- if msUntilBuffRecheckNeeded < 999999 then
+		-- 	zo_callLater(UpdateBuffs, msUntilBuffRecheckNeeded-optimalBuffOverlap)
+		-- end
 	end
+	-- BigLogicRoutine()
+end
+
+local function AutoFightMain()
+	if not IsUnitInCombat('player') or IsReticleHidden() or IsUnitSwimming('player') then return end
+	
+	if ETA > GetGameTimeMilliseconds() then return end
+
+	UpdateBuffs()
+	MyMagicka = GetUnitPower('player', POWERTYPE_MAGICKA)
+
+	if not DamageShieldActive and MyMagicka > 5000 then
+		LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100)
+		LibPixelControl.SetIndOnFor(LibPixelControl.VK_1,50)
+		ETA = GetGameTimeMilliseconds() + 1100
+	end
+
 end
 
 local function OnAddonLoaded(event, name)
