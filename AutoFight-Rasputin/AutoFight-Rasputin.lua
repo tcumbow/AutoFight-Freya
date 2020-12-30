@@ -252,7 +252,7 @@ local function AutoFightMain()
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_2,50)
 		ETA = GetGameTimeMilliseconds() + 2000
 	end
-	
+
 	if FamiliarActive and not FamiliarAOEActive and MyMagicka > 20000 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_2,50)
