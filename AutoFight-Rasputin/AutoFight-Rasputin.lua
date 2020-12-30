@@ -1056,13 +1056,13 @@ local function AutoFightMain()
 	end
 
 	if MyMaxHealth-MyHealth > 13609 and TwilightActive and MyMagicka > 3500 then
-		LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100)
+		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_1,50)
 		ETA = GetGameTimeMilliseconds() + 1100
 	end
 		
 	if not DamageShieldActive and MyMagicka > 10000 then
-		LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100)
+		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_3,50)
 		ETA = GetGameTimeMilliseconds() + 1100
 	end
