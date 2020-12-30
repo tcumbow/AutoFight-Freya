@@ -972,7 +972,7 @@ local function UpdateBuffs()
 	-- SkeletonMageActive = false
 	-- SpiritMenderActive = false
 	FamiliarActive = false
-	-- FamiliarAOEActive = false
+	FamiliarAOEActive = false
 	TwilightActive = false
 	-- CrystalWeaver = false
 	-- CrystalFragmentsProc = false
@@ -1005,8 +1005,8 @@ local function UpdateBuffs()
 				DamageShieldActive = true
 			elseif name=="Summon Volatile Familiar" and id==23316 then
 				FamiliarActive = true
-			-- elseif name=="Volatile Pulse" or (name=="Summon Volatile Familiar" and id==88933) then
-			-- 	FamiliarAOEActive = true
+			elseif name=="Volatile Pulse" or (name=="Summon Volatile Familiar" and id==88933) then
+				FamiliarAOEActive = true
 			elseif name=="Summon Twilight Matriarch" then
 				TwilightActive = true
 			-- elseif name=="Crystal Weaver" then
@@ -1060,7 +1060,7 @@ local function AutoFightMain()
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_1,50)
 		ETA = GetGameTimeMilliseconds() + 1100
 	end
-		
+
 	if not DamageShieldActive and MyMagicka > 10000 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_3,50)
@@ -1070,6 +1070,12 @@ local function AutoFightMain()
 	if not FamiliarActive and MyMagicka > 20000 then
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_2,50)
 		ETA = GetGameTimeMilliseconds() + 2000
+	end
+	
+	if FamiliarActive and not FamiliarAOEActive and MyMagicka > 20000 then
+		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
+		LibPixelControl.SetIndOnFor(LibPixelControl.VK_2,50)
+		ETA = GetGameTimeMilliseconds() + 1100
 	end
 
 end
