@@ -1,4 +1,4 @@
-local ADDON_NAME = "AutoFight-Gideon"
+local ADDON_NAME = "AutoFight-Rasputin"
 local ADDON_VERSION = "1.0"
 local ADDON_AUTHOR = "Tom Cumbow"
 

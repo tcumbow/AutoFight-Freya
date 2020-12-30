@@ -86,7 +86,7 @@
     "emeraldwalk.runonsave": {
         "commands": [
             {
-                "cmd": "robocopy .\\AutoFight-Gideon A:\\AutoFight-Gideon /mir"
+                "cmd": "robocopy .\\AutoFight-Rasputin A:\\AutoFight-Rasputin /mir"
             }
         ]
     }
