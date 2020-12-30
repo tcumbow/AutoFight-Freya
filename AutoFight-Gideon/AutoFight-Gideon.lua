@@ -951,10 +951,20 @@ local function InitialInfoGathering()
 	UpdateBuffs()
 end
 
+local MyMagicka
+
+local function AutoFightMain()
+	if IsReticleHidden() then return end
+	MyMagicka = GetUnitPower('player', POWERTYPE_MAGICKA)
+	if MyMagicka > 5000 then
+		LibPixelControl.SetIndOnFor(LibPixelControl.VK_1,50)
+	end
+end
+
 local function OnAddonLoaded(event, name)
 	if name == ADDON_NAME then
 		EVENT_MANAGER:UnregisterForEvent(ADDON_NAME, event)
-		zo_callLater(InitialInfoGathering, 1000)
+		EVENT_MANAGER:RegisterForUpdate(ADDON_NAME, 100, AutoFightMain)
 	end
 end
 
