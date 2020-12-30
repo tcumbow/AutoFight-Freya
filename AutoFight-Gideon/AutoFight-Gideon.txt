@@ -10,5 +10,6 @@
 ## APIVersion: 100033 100034
 ## Author: Tom Cumbow
 ## Description: AutoFight-Gideon
+## DependsOn: LibPixelControl
 
 AutoFight-Gideon.lua
