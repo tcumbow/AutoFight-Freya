@@ -953,6 +953,9 @@ end
 
 local ETA = 0
 local MyMagicka
+local MyMaxMagicka
+local MyHealth
+local MyMaxHealth
 
 local function UpdateBuffs()
 	-- MajorSorcery = false
@@ -970,7 +973,7 @@ local function UpdateBuffs()
 	-- SpiritMenderActive = false
 	FamiliarActive = false
 	-- FamiliarAOEActive = false
-	-- TwilightActive = false
+	TwilightActive = false
 	-- CrystalWeaver = false
 	-- CrystalFragmentsProc = false
 	-- DnInfernoActive = false
@@ -1004,8 +1007,8 @@ local function UpdateBuffs()
 				FamiliarActive = true
 			-- elseif name=="Volatile Pulse" or (name=="Summon Volatile Familiar" and id==88933) then
 			-- 	FamiliarAOEActive = true
-			-- elseif name=="Summon Twilight Matriarch" then
-			-- 	TwilightActive = true
+			elseif name=="Summon Twilight Matriarch" then
+				TwilightActive = true
 			-- elseif name=="Crystal Weaver" then
 			-- 	CrystalWeaver = true
 			-- elseif name=="Crystal Fragments Proc" then
@@ -1044,15 +1047,27 @@ local function AutoFightMain()
 	if ETA > GetGameTimeMilliseconds() then return end
 
 	UpdateBuffs()
-	MyMagicka = GetUnitPower('player', POWERTYPE_MAGICKA)
+	MyMagicka, MyMaxMagicka = GetUnitPower('player', POWERTYPE_MAGICKA)
+	MyHealth, MyMaxHealth = GetUnitPower('player', POWERTYPE_HEALTH)
 
-	if not DamageShieldActive and MyMagicka > 5000 then
+	if not TwilightActive and MyMagicka > 3500 then
+		LibPixelControl.SetIndOnFor(LibPixelControl.VK_1,50)
+		ETA = GetGameTimeMilliseconds() + 2000
+	end
+
+	if MyMaxHealth-MyHealth > 13609 and TwilightActive and MyMagicka > 3500 then
 		LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100)
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_1,50)
 		ETA = GetGameTimeMilliseconds() + 1100
 	end
+		
+	if not DamageShieldActive and MyMagicka > 10000 then
+		LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100)
+		LibPixelControl.SetIndOnFor(LibPixelControl.VK_3,50)
+		ETA = GetGameTimeMilliseconds() + 1100
+	end
 
-	if not FamiliarActive and MyMagicka > 5000 then
+	if not FamiliarActive and MyMagicka > 20000 then
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_2,50)
 		ETA = GetGameTimeMilliseconds() + 2000
 	end
