@@ -254,6 +254,9 @@ local function AutoFightMain()
 	elseif GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE and MyMagicka > 10000 then
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_4,50)
 		ETA = GetGameTimeMilliseconds() + 1500
+	elseif GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE then
+		LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_LEFT,2200)
+		ETA = GetGameTimeMilliseconds() + 2000
 	end
 
 end
