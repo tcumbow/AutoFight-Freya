@@ -81,7 +81,8 @@
         "COMBAT_SETTING_PREVENT_ATTACKING_INNOCENTS",
         "IsUnitSwimming",
         "LibPixelControl",
-        "IsBlockActive"
+        "IsBlockActive",
+        "GetUnitName"
     ],
     "cSpell.words": [
         "Sorc"
