@@ -235,7 +235,6 @@ local function AutoFightMain()
 	elseif LowestGroupHealthPercentWithoutRegen < 0.90 and MyMagicka > 3500 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_5,50)
-		ETA = GetGameTimeMilliseconds() + 1100
 	elseif CrystalFragmentsProc and GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE and MyMagicka > 3500 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_4,50)
@@ -249,10 +248,8 @@ local function AutoFightMain()
 	elseif FamiliarActive and not FamiliarAOEActive and MyMagicka > 10000 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_2,50)
-		ETA = GetGameTimeMilliseconds() + 1100
 	elseif GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE and MyMagicka > 10000 then
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_4,50)
-		ETA = GetGameTimeMilliseconds() + 1500
 	elseif GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE then
 		LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_LEFT,2200)
 		ETA = GetGameTimeMilliseconds() + 2700
