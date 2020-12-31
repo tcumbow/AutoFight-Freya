@@ -211,8 +211,10 @@ end
 local function OnAddonLoaded(event, name)
 	if name == ADDON_NAME then
 		EVENT_MANAGER:UnregisterForEvent(ADDON_NAME, event)
-		EVENT_MANAGER:RegisterForUpdate(ADDON_NAME, 100, AutoFightMain)
-		EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_PLAYER_COMBAT_STATE, OnEventCombatStateChanged)
+		if GetUnitName("player") == "Freya Fiori" then
+			EVENT_MANAGER:RegisterForUpdate(ADDON_NAME, 100, AutoFightMain)
+			EVENT_MANAGER:RegisterForEvent(ADDON_NAME, EVENT_PLAYER_COMBAT_STATE, OnEventCombatStateChanged)
+		end
 	end
 end
 
