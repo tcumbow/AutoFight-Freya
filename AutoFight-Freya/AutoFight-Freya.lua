@@ -104,44 +104,6 @@ local function UnitHasRegen(unitTag)
 	return false
 end
 
-local function UpdateLowestGroupHealth()
-	GroupSize = GetGroupSize()
-	LowestGroupHealthPercentWithoutRegen = 1.00
-	LowestGroupHealthPercentWithRegen = 1.00
-	LowestGroupHealthPercent = 1.00
-
-	if GroupSize > 0 then
-		for i = 1, GroupSize do
-			local unitTag = GetGroupUnitTagByIndex(i)
-			local currentHp, maxHp, effectiveMaxHp = GetUnitPower(unitTag, POWERTYPE_HEALTH)
-			local HpPercent = currentHp / maxHp
-			local HasRegen = UnitHasRegen(unitTag)
-			local InHealingRange = IsUnitInGroupSupportRange(unitTag)
-			local IsAlive = not IsUnitDead(unitTag)
-			local IsPlayer = GetUnitType(unitTag) == 1
-			if HpPercent < LowestGroupHealthPercent and InHealingRange and IsAlive and IsPlayer then
-				LowestGroupHealthPercent = HpPercent
-			end
-			if HpPercent < LowestGroupHealthPercentWithoutRegen and HasRegen == false and InHealingRange and IsAlive and IsPlayer then
-				LowestGroupHealthPercentWithoutRegen = HpPercent
-			elseif HpPercent < LowestGroupHealthPercentWithRegen and HasRegen and InHealingRange and IsAlive and IsPlayer then
-				LowestGroupHealthPercentWithRegen = HpPercent
-			end
-		end
-	else
-		local unitTag = "player"
-		local currentHp, maxHp, effectiveMaxHp = GetUnitPower(unitTag, POWERTYPE_HEALTH)
-		local HpPercent = currentHp / maxHp
-		LowestGroupHealthPercent = HpPercent
-		local HasRegen = UnitHasRegen(unitTag)
-		if HasRegen == false then
-			LowestGroupHealthPercentWithoutRegen = HpPercent
-		elseif HasRegen then
-			LowestGroupHealthPercentWithRegen = HpPercent
-		end
-	end
-end
-
 
 local function UpdateBuffs()
 	MajorSorcery = false
@@ -162,7 +124,7 @@ local function UpdateBuffs()
 	TwilightActive = false
 	-- CrystalWeaver = false
 	CrystalFragmentsProc = false
-	-- DnInfernoActive = false
+	DnInfernoActive = false
 	-- EnergyOverloadActive = false
 	local numBuffs = GetNumBuffs("player")
 	if numBuffs > 0 then
@@ -194,8 +156,8 @@ local function UpdateBuffs()
 			-- 	CrystalWeaver = true
 			elseif name=="Crystal Fragments Proc" then
 				CrystalFragmentsProc = true
-			-- elseif name=="Flames of Oblivion" then
-			-- 	DnInfernoActive = true
+			elseif name=="Flames of Oblivion" then
+			 	DnInfernoActive = true
 			-- elseif name=="Energy Overload" then
 			-- 	EnergyOverloadActive = true
 			-- elseif name=="Empower" then
@@ -219,37 +181,25 @@ local function AutoFightMain()
 	
 	if ETA > GetGameTimeMilliseconds() then return end
 
-	UpdateLowestGroupHealth()
 	UpdateBuffs()
 	MyMagicka, MyMaxMagicka = GetUnitPower('player', POWERTYPE_MAGICKA)
+	MyStamina, MyMaxStamina = GetUnitPower('player', POWERTYPE_STAMINA)
+	MyHealth, MyMaxHealth = GetUnitPower('player', POWERTYPE_HEALTH)
+	MyHealthPercent = MyHealth/MyMaxHealth
 
-	-- MyHealth, MyMaxHealth = GetUnitPower('player', POWERTYPE_HEALTH)
-
-	if not TwilightActive and MyMagicka > 3500 then
-		LibPixelControl.SetIndOnFor(LibPixelControl.VK_1,50)
-		ETA = GetGameTimeMilliseconds() + 2000
-	elseif LowestGroupHealthPercent < 0.40 and TwilightActive and MyMagicka > 3500 then
-		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
-		LibPixelControl.SetIndOnFor(LibPixelControl.VK_1,50)
-		ETA = GetGameTimeMilliseconds() + 1100
-	elseif LowestGroupHealthPercentWithoutRegen < 0.90 and MyMagicka > 3500 then
-		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
-		LibPixelControl.SetIndOnFor(LibPixelControl.VK_5,50)
-	elseif CrystalFragmentsProc and GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE and MyMagicka > 3500 then
+	if MyHealthPercent < 0.40 and MyMagicka > 3500 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_4,50)
+		ETA = GetGameTimeMilliseconds() + 1100
 	elseif not MajorSorcery and MyMagicka > 10000 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_3,50)
 		ETA = GetGameTimeMilliseconds() + 1100
-	elseif not FamiliarActive and MyMagicka > 10000 then
-		LibPixelControl.SetIndOnFor(LibPixelControl.VK_2,50)
-		ETA = GetGameTimeMilliseconds() + 2000
-	elseif FamiliarActive and not FamiliarAOEActive and MyMagicka > 10000 then
+	elseif not DnInfernoActive and MyMagicka > 10000 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
-		LibPixelControl.SetIndOnFor(LibPixelControl.VK_2,50)
-	elseif GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE and MyMagicka > 10000 then
-		LibPixelControl.SetIndOnFor(LibPixelControl.VK_4,50)
+		LibPixelControl.SetIndOnFor(LibPixelControl.VK_5,50)
+	elseif GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE and MyStamina > 10000 then
+		LibPixelControl.SetIndOnFor(LibPixelControl.VK_1,50)
 	elseif GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE then
 		LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_LEFT,2200)
 		ETA = GetGameTimeMilliseconds() + 2700
