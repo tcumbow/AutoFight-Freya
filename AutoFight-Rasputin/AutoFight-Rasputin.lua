@@ -144,14 +144,14 @@ end
 
 
 local function UpdateBuffs()
-	-- MajorSorcery = false
+	MajorSorcery = false
 	-- MajorProphecy = false
 	-- MinorSorcery = false
 	-- MajorResolve = false
 	-- MinorMending = false
 	-- MeditationActive = false
 	-- ImbueWeaponActive = false
-	DamageShieldActive = false
+	-- DamageShieldActive = false
 	-- MajorGallop = false
 	-- MajorExpedition = false
 	-- Empower = false
@@ -168,8 +168,8 @@ local function UpdateBuffs()
 	if numBuffs > 0 then
 		for i = 1, numBuffs do
 			local name, _, endTime, _, _, _, _, _, _, _, id, _ = GetUnitBuffInfo("player", i)
-			-- if name=="Major Sorcery" then
-			-- 	MajorSorcery = true
+			if name=="Major Sorcery" then
+				MajorSorcery = true
 			-- elseif name=="Major Prophecy" then
 			-- 	MajorProphecy = true
 			-- elseif name=="Minor Sorcery" then
@@ -182,8 +182,8 @@ local function UpdateBuffs()
 			-- 	MeditationActive = true
 			-- elseif name=="Elemental Weapon" then
 			-- 	ImbueWeaponActive = true
-			if name=="Conjured Ward" or name=="Empowered Ward" then
-				DamageShieldActive = true
+			-- if name=="Conjured Ward" or name=="Empowered Ward" then
+			-- 	DamageShieldActive = true
 			elseif name=="Summon Volatile Familiar" and id==23316 then
 				FamiliarActive = true
 			elseif name=="Volatile Pulse" or (name=="Summon Volatile Familiar" and id==88933) then
@@ -239,8 +239,7 @@ local function AutoFightMain()
 	elseif CrystalFragmentsProc and GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE and MyMagicka > 3500 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_4,50)
-		ETA = GetGameTimeMilliseconds() + 1500
-	elseif not DamageShieldActive and MyMagicka > 10000 then
+	elseif not MajorSorcery and MyMagicka > 10000 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_3,50)
 		ETA = GetGameTimeMilliseconds() + 1100
