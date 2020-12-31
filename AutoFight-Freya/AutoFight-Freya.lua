@@ -62,7 +62,7 @@ local TargetNotFury = false
 local TargetNotMagSteal = false
 
 ---------------------------------------------------------------------------------
-local ADDON_NAME = "AutoFight-Rasputin"
+local ADDON_NAME = "AutoFight-Freya"
 
 local ETA = 0
 local MyMagicka
