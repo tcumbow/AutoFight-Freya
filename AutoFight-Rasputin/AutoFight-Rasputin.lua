@@ -244,10 +244,10 @@ local function AutoFightMain()
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_3,50)
 		ETA = GetGameTimeMilliseconds() + 1100
-	elseif not FamiliarActive and MyMagicka > 20000 then
+	elseif not FamiliarActive and MyMagicka > 10000 then
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_2,50)
 		ETA = GetGameTimeMilliseconds() + 2000
-	elseif FamiliarActive and not FamiliarAOEActive and MyMagicka > 20000 then
+	elseif FamiliarActive and not FamiliarAOEActive and MyMagicka > 10000 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_2,50)
 		ETA = GetGameTimeMilliseconds() + 1100
