@@ -232,7 +232,7 @@ local function AutoFightMain()
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_1,50)
 		ETA = GetGameTimeMilliseconds() + 1100
-	elseif LowestGroupHealthPercentWithoutRegen < 0.90 and TwilightActive and MyMagicka > 3500 then
+	elseif LowestGroupHealthPercentWithoutRegen < 0.90 and MyMagicka > 3500 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_5,50)
 		ETA = GetGameTimeMilliseconds() + 1100
