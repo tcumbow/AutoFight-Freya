@@ -69,6 +69,7 @@ local MyMagicka
 local MyMaxMagicka
 local MyHealth
 local MyMaxHealth
+local MyHealthPercent
 
 local DamageShieldActive = false
 local FamiliarActive = false
