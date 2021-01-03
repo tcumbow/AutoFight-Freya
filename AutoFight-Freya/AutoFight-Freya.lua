@@ -131,7 +131,7 @@ local function UpdateBuffs()
 	if numBuffs > 0 then
 		for i = 1, numBuffs do
 			local name, _, endTime, _, _, _, _, _, _, _, id, _ = GetUnitBuffInfo("player", i)
-			if name=="Major Sorcery" then
+			if name=="Molten Armaments" then
 				MajorSorcery = true
 			-- elseif name=="Major Prophecy" then
 			-- 	MajorProphecy = true
