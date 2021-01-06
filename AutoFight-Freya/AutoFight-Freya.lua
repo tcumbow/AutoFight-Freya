@@ -188,7 +188,7 @@ local function AutoFightMain()
 	MyHealth, MyMaxHealth = GetUnitPower('player', POWERTYPE_HEALTH)
 	MyHealthPercent = MyHealth/MyMaxHealth
 
-	if MyHealthPercent < 0.40 and MyMagicka > 3500 then
+	if MyHealthPercent < 0.60 and MyStamina > 4000 then
 		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_4,50)
 		ETA = GetGameTimeMilliseconds() + 1100
