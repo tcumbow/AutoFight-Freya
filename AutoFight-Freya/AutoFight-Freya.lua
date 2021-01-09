@@ -67,6 +67,8 @@ local ADDON_NAME = "AutoFight-Freya"
 local ETA = 0
 local MyMagicka
 local MyMaxMagicka
+local MyStamina
+local MyMaxStamina
 local MyHealth
 local MyMaxHealth
 local MyHealthPercent
