@@ -189,15 +189,12 @@ local function AutoFightMain()
 	MyHealthPercent = MyHealth/MyMaxHealth
 
 	if MyHealthPercent < 0.60 and MyStamina > 4000 then
-		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_4,50)
 		ETA = GetGameTimeMilliseconds() + 1100
 	elseif not MajorSorcery and MyMagicka > 10000 then
-		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_3,50)
 		ETA = GetGameTimeMilliseconds() + 1100
 	elseif not DnInfernoActive and MyMagicka > 10000 then
-		if not IsBlockActive() then LibPixelControl.SetIndOnFor(LibPixelControl.VM_BTN_RIGHT,1100) end
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_5,50)
 	elseif GetUnitReaction('reticleover') == UNIT_REACTION_HOSTILE and MyStamina > 10000 then
 		LibPixelControl.SetIndOnFor(LibPixelControl.VK_1,50)
